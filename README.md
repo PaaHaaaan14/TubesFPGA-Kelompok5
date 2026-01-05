@@ -117,15 +117,21 @@ Transisi IDLE → SHIFT dipicu oleh step_trigger dari Edge Detection. Setelah sa
 
 ---
 
-## Hasil Simulasi dan Analisis  
+# Hasil Simulasi dan Analisis
 
-Simulasi dilakukan menggunakan testbench dan ModelSim. Hasil menunjukkan:  
+## Hasil Simulasi ModelSim
 
-- Reset berhasil menginisialisasi sistem ke nilai 10.  
-- Perubahan input SW langsung tercermin di LEDR namun tidak langsung di HEX.  
-- Output filter meningkat bertahap: 10 → 30 → 50 → 70 → 90.  
+![Waveform Hasil Simulasi](images/waveform.png)
 
-Hal ini membuktikan FSM menahan update data hingga trigger valid dan unit aritmatika bekerja sesuai perancangan sebagai Low Pass Filter.
+*Keterangan: Waveform hasil simulasi ModelSim untuk sequence detector Mealy pola 101.*
+
+Berdasarkan hasil simulasi yang ditunjukkan pada waveform, dapat diamati bahwa sinyal clock dan reset bekerja dengan normal. Saat sinyal reset berada pada kondisi aktif, FSM berada pada state awal **S0**. Setelah reset dilepas, FSM mulai merespons input serial **din** sesuai dengan urutan bit yang diberikan.
+
+Ketika input membentuk urutan **1 → 0 → 1**, FSM melakukan transisi state dari **S0 → S1 → S2 → S1**. Pada kondisi FSM berada di **state S2** dan menerima input **1**, sinyal output **dout** menjadi **HIGH** selama satu siklus clock. Hal ini menunjukkan bahwa pola **101** berhasil terdeteksi.
+
+Karakteristik **Mealy Machine** terlihat jelas pada hasil simulasi, di mana output muncul secara langsung pada transisi state akibat kombinasi **state dan input**, tanpa harus menunggu satu siklus clock tambahan seperti pada Moore Machine. Setelah pola terdeteksi, FSM kembali ke **state S1**, sehingga memungkinkan terjadinya **overlapping detection** untuk pola berikutnya.
+
+Secara keseluruhan, hasil simulasi membuktikan bahwa sequence detector Mealy untuk pola **101** telah bekerja sesuai dengan perancangan, baik dari sisi logika FSM, waktu respons output, maupun kemampuan mendeteksi pola secara berulang.
 
 ---
 
