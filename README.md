@@ -123,15 +123,25 @@ Transisi IDLE → SHIFT dipicu oleh step_trigger dari Edge Detection. Setelah sa
 
 ![Waveform Hasil Simulasi](images/waveform.png)
 
-*Keterangan: Waveform hasil simulasi ModelSim untuk sequence detector Mealy pola 101.*
+1.	Kondisi Awal (Reset):
+   a.	Terlihat sinyal KEY bernilai 1110 (Bit 0 low), yang menandakan tombol Reset ditekan.
+   b.	Output HEX1 bernilai 1111001 (Angka 1) dan HEX0 bernilai 1000000 (Angka 0).
+   c.	Hasil: Sistem terinisialisasi dengan nilai 10.
+2.	Perubahan Input (Switch):
+   a.	Sinyal SW berubah dari 0 menjadi 1 (Input 90).
+   b.	Sinyal LEDR langsung berubah dari ...01010 (10) menjadi ...1011010 (90).
+   c.	HEX1 dan HEX0 belum berubah (masih 10). FSM menahan data sampai ada trigger.
+3.	Proses Step: Setiap kali sinyal KEY berubah menjadi 1101 (Bit 1 low / Tombol Step ditekan), output berubah sesuai logika filter rata-rata:
+### Tabel Hasil Perhitungan Moving Average 4-Tap
 
-Berdasarkan hasil simulasi yang ditunjukkan pada waveform, dapat diamati bahwa sinyal clock dan reset bekerja dengan normal. Saat sinyal reset berada pada kondisi aktif, FSM berada pada state awal **S0**. Setelah reset dilepas, FSM mulai merespons input serial **din** sesuai dengan urutan bit yang diberikan.
+| Step Ke- | Kode HEX1 (Puluhan) | Kode HEX0 (Satuan) | Nilai Desimal | Analisis Perhitungan |
+|---------|---------------------|--------------------|---------------|----------------------|
+| 1 | 0110000 (Angka 3) | 1000000 (Angka 0) | **30** | (90 + 10 + 10 + 10) / 4 = **30** |
+| 2 | 0010010 (Angka 5) | 1000000 (Angka 0) | **50** | (90 + 90 + 10 + 10) / 4 = **50** |
+| 3 | 1111000 (Angka 7) | 1000000 (Angka 0) | **70** | (90 + 90 + 90 + 10) / 4 = **70** |
+| 4 | 0010000 (Angka 9) | 1000000 (Angka 0) | **90** | (90 + 90 + 90 + 90) / 4 = **90** |
 
-Ketika input membentuk urutan **1 → 0 → 1**, FSM melakukan transisi state dari **S0 → S1 → S2 → S1**. Pada kondisi FSM berada di **state S2** dan menerima input **1**, sinyal output **dout** menjadi **HIGH** selama satu siklus clock. Hal ini menunjukkan bahwa pola **101** berhasil terdeteksi.
 
-Karakteristik **Mealy Machine** terlihat jelas pada hasil simulasi, di mana output muncul secara langsung pada transisi state akibat kombinasi **state dan input**, tanpa harus menunggu satu siklus clock tambahan seperti pada Moore Machine. Setelah pola terdeteksi, FSM kembali ke **state S1**, sehingga memungkinkan terjadinya **overlapping detection** untuk pola berikutnya.
-
-Secara keseluruhan, hasil simulasi membuktikan bahwa sequence detector Mealy untuk pola **101** telah bekerja sesuai dengan perancangan, baik dari sisi logika FSM, waktu respons output, maupun kemampuan mendeteksi pola secara berulang.
 
 ---
 
