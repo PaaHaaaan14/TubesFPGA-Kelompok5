@@ -88,7 +88,7 @@ Tugas besar ini merancang sistem pemrosesan sinyal digital berupa Filter FIR (Fi
 ---
 
 ## Blok Diagram  
-![Block Diagram Sistem](images/block_diagram.png)
+![Block Diagram Sistem](images/Blokdiagram.png)
 Diagram blok dibagi menjadi tiga bagian utama:  
 
 ### 1. Blok Input  
