@@ -108,12 +108,31 @@ Diagram blok dibagi menjadi tiga bagian utama:
 ## Finite State Machine (FSM)  
 ![Diagram FSM](images/fsm.png)
 
-Sistem menggunakan FSM tipe Moore dengan dua state utama:  
+Sistem dirancang menggunakan **Finite State Machine (FSM)** dengan dua state utama, yaitu **STATE_IDLE** dan **STATE_SHIFT**. FSM ini berfungsi sebagai **unit kendali (control unit)** yang mengatur kapan proses pengambilan data dan pergeseran register dilakukan pada sistem.
 
-- **STATE_IDLE**: Sistem menunggu input, enable datapath nonaktif.  
-- **STATE_SHIFT**: FSM mengaktifkan enable datapath untuk satu siklus clock.  
+FSM bekerja secara sinkron terhadap sinyal clock dan memiliki mekanisme reset untuk menginisialisasi sistem ke kondisi awal.
 
-Transisi IDLE → SHIFT dipicu oleh step_trigger dari Edge Detection. Setelah satu siklus clock, FSM kembali ke IDLE untuk mencegah pembacaan ganda.
+- **STATE_IDLE (Kondisi Tunggu)**  
+  STATE_IDLE merupakan kondisi awal sistem setelah reset diaktifkan. Pada state ini, sistem berada dalam kondisi standby dan **tidak melakukan proses pergeseran data**.  
+  FSM menonaktifkan sinyal enable ke jalur datapath sehingga nilai pada register tetap dipertahankan.  
+  Jika tidak ada sinyal pemicu (trigger), FSM akan tetap berada pada STATE_IDLE.
+
+- **STATE_SHIFT (Kondisi Proses)**  
+  STATE_SHIFT merupakan kondisi aktif di mana sistem melakukan **proses pergeseran data** dan perhitungan.  
+  Pada state ini, FSM mengaktifkan sinyal enable sehingga datapath dapat mengambil data baru dan menggeser isi register sesuai dengan logika sistem.
+
+### Tabel Transisi Finite State Machine (FSM)
+
+| State Saat Ini | Kondisi / Input | State Berikutnya | Aksi / Keterangan |
+|----------------|------------------|------------------|-------------------|
+| STATE_IDLE | Reset aktif | STATE_IDLE | FSM diinisialisasi ke kondisi awal |
+| STATE_IDLE | Tidak ada trigger | STATE_IDLE | Sistem standby, tidak ada proses |
+| STATE_IDLE | Trigger aktif (Step) | STATE_SHIFT | Memulai satu siklus pemrosesan |
+| STATE_SHIFT | Satu siklus clock selesai | STATE_IDLE | Proses selesai, kembali ke standby |
+
+FSM ini bersifat **Moore Machine**, di mana keluaran kendali (enable datapath) hanya bergantung pada **state saat ini**, bukan langsung pada input. Dengan desain dua state ini, sistem menjadi lebih sederhana, stabil, dan mudah dianalisis.
+
+Secara keseluruhan, FSM dengan dua state ini berhasil mengatur alur kerja sistem secara terkontrol, memastikan proses hanya berjalan saat diperlukan, serta menjaga sinkronisasi antara input pengguna dan proses internal sistem.
 
 ---
 
