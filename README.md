@@ -141,6 +141,8 @@ Transisi IDLE → SHIFT dipicu oleh step_trigger dari Edge Detection. Setelah sa
 | 3 | 1111000 (Angka 7) | 1000000 (Angka 0) | **70** | (90 + 90 + 90 + 10) / 4 = **70** |
 | 4 | 0010000 (Angka 9) | 1000000 (Angka 0) | **90** | (90 + 90 + 90 + 90) / 4 = **90** |
 
+Berdasarkan analisis terhadap waveform simulasi, sistem terbukti mampu menjalankan fungsi Moving Average Filter 4-Tap dengan presisi tinggi sesuai spesifikasi perancangan. Pada fase awal, sinyal reset berhasil menginisialisasi seluruh register sehingga output HEX berada pada nilai stabil 10. Ketika terjadi perubahan input mendadak dari logika '0' (nilai 10) ke logika '1' (nilai 90) pada sinyal SW, sistem menunjukkan respons yang terbagi dua: indikator LEDR merespons seketika secara real-time, sedangkan output hasil filter (HEX) tetap bertahan pada nilai lama. Hal ini membuktikan bahwa Finite State Machine (FSM) berhasil menahan pembaruan data hingga sinyal pemicu yang valid diterima. Selanjutnya, saat tombol Step (KEY[1]) ditekan secara berurutan (terlihat pada transisi sinyal KEY ke logika low), output 7-Segment mengalami perubahan transien yang linear, yaitu bergerak dari 10 menjadi 30, 50, 70, hingga akhirnya mencapai kondisi steady state di angka 90. Respons bertahap ini memverifikasi bahwa unit aritmatika (penjumlah dan pembagi) berfungsi akurat, sekaligus memvalidasi karakteristik sistem sebagai Low Pass Filter yang efektif meredam lonjakan data input melalui mekanisme sampling sekuensia
+
 
 
 ---
